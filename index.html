@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f6f7f3">
+  <meta name="description" content="Six compact, two-way conversions. Edit either side to calculate on your device.">
+  <title>Quick Conversions · Everyday Toolkit</title>
+  <style>
+    :root { color-scheme: light; --paper: #f6f7f3; --ink: #203b38; --green: #235c4b; --muted: #687a74; --line: #e0e7df; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--paper); color: var(--ink); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; -webkit-font-smoothing: antialiased; }
+    button, input { font: inherit; }
+    button { cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+    button:focus-visible, input:focus-visible { outline: 2px solid #6c987b; outline-offset: 3px; }
+    .shell { width: 100%; max-width: 480px; margin: 0 auto; padding: max(12px, env(safe-area-inset-top)) 16px max(12px, env(safe-area-inset-bottom)); }
+    .topbar { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    h1 { margin: 0; font-size: 25px; line-height: 1.2; font-weight: 650; letter-spacing: -.035em; }
+    .clear { flex-shrink: 0; min-height: 44px; padding: 0 2px 0 8px; border: 0; background: none; color: var(--green); font-size: 12px; }
+    .intro { margin: 2px 0 14px; color: var(--muted); font-size: 12px; line-height: 18px; }
+    .pairs { display: grid; gap: 8px; }
+    .pair { margin: 0; padding: 8px; background: #fff; border: 1px solid var(--line); border-radius: 14px; }
+    .pair:nth-child(1) { --tint: #eef4e9; --green: #235c4b; --line: #dbe7d7; }
+    .pair:nth-child(2) { --tint: #fff0df; --green: #8b501b; --line: #f2dfc6; }
+    .pair:nth-child(3) { --tint: #eaf2fc; --green: #315d8b; --line: #d6e3f4; }
+    .pair:nth-child(4) { --tint: #fcecef; --green: #93485d; --line: #f0d8df; }
+    .pair:nth-child(5) { --tint: #f1ecfb; --green: #715397; --line: #e3d9f1; }
+    .pair:nth-child(6) { --tint: #e5f5f4; --green: #236b70; --line: #cce7e5; }
+    .pair-grid { display: grid; grid-template-columns: minmax(0, 1fr) 32px minmax(0, 1fr); align-items: center; gap: 4px; }
+    .field { min-width: 0; padding: 6px 10px; background: var(--tint); border: 1px solid transparent; border-radius: 9px; }
+    .field:focus-within { border-color: var(--green); }
+    .field label { display: block; color: var(--green); font-size: 12px; font-weight: 600; line-height: 16px; }
+    .field label span { color: var(--muted); font-weight: 400; }
+    input { display: block; width: 100%; min-width: 0; height: 28px; border: 0; border-radius: 3px; padding: 1px 0 0; background: transparent; color: var(--ink); font-size: 23px; line-height: 27px; letter-spacing: -.025em; font-variant-numeric: tabular-nums; }
+    input::placeholder { color: #aebcab; }
+    input[aria-invalid="true"] { color: #a24932; }
+    .direction { color: #8c9f87; text-align: center; font-size: 19px; }
+    .sign { display: block; width: 32px; min-height: 44px; padding: 0; border: 0; border-radius: 7px; background: none; color: var(--green); font-size: 20px; }
+    .temperature .direction { font-size: 14px; line-height: 14px; }
+    .status { margin: 6px 2px 0; font-size: 11px; line-height: 1.35; color: #a24932; }
+    .status:empty { display: none; }
+    footer { margin-top: 12px; color: var(--muted); text-align: center; font-size: 10px; line-height: 16px; }
+    noscript p { padding: 12px; background: #fff0e5; border-radius: 10px; font-size: 13px; }
+    @media (max-width: 350px) { .shell { padding-left: 12px; padding-right: 12px; } h1 { font-size: 23px; } input { font-size: 18px; } .field { padding-left: 8px; padding-right: 8px; } }
+    @media (max-height: 640px) { .pair { padding: 5px; } .pairs { gap: 6px; } .intro { margin-bottom: 8px; } footer { margin-top: 4px; } }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header>
+      <div class="topbar"><h1>Quick conversions</h1><button type="button" class="clear" id="clear">Clear all</button></div>
+      <p class="intro">Edit either side. The other updates instantly.</p>
+    </header>
+    <noscript><p>Enable JavaScript to use the converter.</p></noscript>
+    <div class="pairs">
+      <section class="pair" aria-label="Kilograms and pounds">
+        <div class="pair-grid">
+          <div class="field"><label for="kg">kg</label><input id="kg" aria-label="Kilograms" inputmode="decimal" autocomplete="off" spellcheck="false" aria-describedby="mass-status"></div>
+          <span class="direction" aria-hidden="true">↔</span>
+          <div class="field"><label for="lbs">lbs</label><input id="lbs" aria-label="Pounds" inputmode="decimal" autocomplete="off" spellcheck="false" aria-describedby="mass-status"></div>
+        </div>
+        <p class="status" id="mass-status" role="status"></p>
+      </section>
+      <section class="pair" aria-label="Kilocalories and kilojoules">
+        <div class="pair-grid">
+          <div class="field"><label for="kcal">kcal</label><input id="kcal" aria-label="Kilocalories" inputmode="decimal" autocomplete="off" spellcheck="false" aria-describedby="energy-status"></div>
+          <span class="direction" aria-hidden="true">↔</span>
+          <div class="field"><label for="kj">kJ</label><input id="kj" aria-label="Kilojoules" inputmode="decimal" autocomplete="off" spellcheck="false" aria-describedby="energy-status"></div>
+        </div>
+        <p class="status" id="energy-status" role="status"></p>
+      </section>
+      <section class="pair" aria-label="Centimeters and inches">
+        <div class="pair-grid">
+          <div class="field"><label for="cm">cm</label><input id="cm" aria-label="Centimeters" inputmode="decimal" autocomplete="off" spellcheck="false" aria-describedby="length-status"></div>
+          <span class="direction" aria-hidden="true">↔</span>
+          <div class="field"><label for="inch">inch</label><input id="inch" aria-label="Inches" inputmode="decimal" autocomplete="off" spellcheck="false" aria-describedby="length-status"></div>
+        </div>
+        <p class="status" id="length-status" role="status"></p>
+      </section>
+      <section class="pair temperature" aria-label="Celsius and Fahrenheit">
+        <div class="pair-grid">
+          <div class="field"><label for="celsius">°C</label><input id="celsius" aria-label="Celsius" inputmode="decimal" autocomplete="off" spellcheck="false" aria-describedby="temperature-status"></div>
+          <div><div class="direction" aria-hidden="true">↔</div><button type="button" class="sign" id="sign" aria-label="Toggle the sign of the last edited temperature" title="Change the sign of the last edited temperature">±</button></div>
+          <div class="field"><label for="fahrenheit">°F</label><input id="fahrenheit" aria-label="Fahrenheit" inputmode="decimal" autocomplete="off" spellcheck="false" aria-describedby="temperature-status"></div>
+        </div>
+        <p class="status" id="temperature-status" role="status"></p>
+      </section>
+      <section class="pair" aria-label="Sodium and sodium chloride in milligrams">
+        <div class="pair-grid">
+          <div class="field"><label for="sodium">Na <span>mg</span></label><input id="sodium" aria-label="Sodium in milligrams" inputmode="decimal" autocomplete="off" spellcheck="false" aria-describedby="salt-status"></div>
+          <span class="direction" aria-hidden="true">↔</span>
+          <div class="field"><label for="salt">NaCl <span>mg</span></label><input id="salt" aria-label="Sodium chloride in milligrams" inputmode="decimal" autocomplete="off" spellcheck="false" aria-describedby="salt-status"></div>
+        </div>
+        <p class="status" id="salt-status" role="status"></p>
+      </section>
+      <section class="pair" aria-label="K-Ultra and C40 grinders">
+        <div class="pair-grid">
+          <div class="field"><label for="k-ultra">K-Ultra</label><input id="k-ultra" aria-label="K-Ultra" inputmode="decimal" autocomplete="off" spellcheck="false" aria-describedby="grinder-status"></div>
+          <span class="direction" aria-hidden="true">↔</span>
+          <div class="field"><label for="c40">C40</label><input id="c40" aria-label="C40" inputmode="decimal" autocomplete="off" spellcheck="false" aria-describedby="grinder-status"></div>
+        </div>
+        <p class="status" id="grinder-status" role="status"></p>
+      </section>
+    </div>
+    <footer>On-device calculations</footer>
+  </main>
+  <script>
+    'use strict';
+    // Sodium is monoisotopic; chlorine uses the conventional atomic weight.
+    const saltRatio = (22.98976928 + 35.45) / 22.98976928;
+    // A shared centerline keeps the two directions consistent. Near-duplicate
+    // plateaus are represented by their midpoint (13.5 and 25.5).
+    const grinderCalibration = [
+      { c40: 0, kUltra: 0 }, { c40: 7, kUltra: 24 }, { c40: 10, kUltra: 37 },
+      { c40: 13.5, kUltra: 49 }, { c40: 15, kUltra: 53 }, { c40: 19, kUltra: 67 },
+      { c40: 20, kUltra: 72.5 }, { c40: 24, kUltra: 86 }, { c40: 25.5, kUltra: 91.5 },
+      { c40: 33, kUltra: 95.5 }, { c40: 40, kUltra: 100 }
+    ];
+
+    function interpolate(value, points, inputKey, outputKey) {
+      if (value < points[0][inputKey] || value > points[points.length - 1][inputKey]) return NaN;
+      for (let i = 1; i < points.length; i++) {
+        const lower = points[i - 1];
+        const upper = points[i];
+        const x0 = lower[inputKey];
+        const x1 = upper[inputKey];
+        if (value <= x1) return lower[outputKey] + (value - x0) / (x1 - x0) * (upper[outputKey] - lower[outputKey]);
+      }
+      return NaN;
+    }
+
+    const pairs = [
+      { name: 'mass', ids: ['kg', 'lbs'], forward: n => n / 0.45359237, reverse: n => n * 0.45359237 },
+      { name: 'energy', ids: ['kcal', 'kj'], forward: n => n * 4.184, reverse: n => n / 4.184 },
+      { name: 'length', ids: ['cm', 'inch'], forward: n => n / 2.54, reverse: n => n * 2.54 },
+      { name: 'temperature', ids: ['celsius', 'fahrenheit'], forward: n => n * 1.8 + 32, reverse: n => (n - 32) / 1.8 },
+      { name: 'salt', ids: ['sodium', 'salt'], forward: n => n * saltRatio, reverse: n => n / saltRatio },
+      { name: 'grinder', ids: ['k-ultra', 'c40'], ranges: [[0, 100], [0, 40]],
+        forward: n => interpolate(n, grinderCalibration, 'kUltra', 'c40'),
+        reverse: n => interpolate(n, grinderCalibration, 'c40', 'kUltra') }
+    ];
+    let activeTemperature = 0;
+
+    function parseNumber(raw) {
+      const text = raw.trim().replace(/−/g, '-');
+      if (text === '') return { empty: true };
+      if (!/^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?$/.test(text)) return { invalid: true };
+      const value = Number(text);
+      return Number.isFinite(value) ? { value } : { invalid: true };
+    }
+
+    function formatNumber(value) {
+      // Keep results short without hiding very small nonzero values.
+      if (value !== 0 && Math.abs(value) < 0.01) {
+        return value.toExponential(2).replace(/\.?0+e/, 'e');
+      }
+      return String(Number(value.toFixed(2)));
+    }
+
+    function update(pair, side) {
+      const source = document.getElementById(pair.ids[side]);
+      const target = document.getElementById(pair.ids[1 - side]);
+      const status = document.getElementById(pair.name + '-status');
+      const parsed = parseNumber(source.value);
+      source.setAttribute('aria-invalid', String(Boolean(parsed.invalid)));
+      target.setAttribute('aria-invalid', 'false');
+      status.textContent = '';
+      if (parsed.empty || parsed.invalid) {
+        target.value = '';
+        if (parsed.invalid) status.textContent = 'Enter a valid number.';
+        return;
+      }
+      if (pair.ranges) {
+        const [min, max] = pair.ranges[side];
+        if (parsed.value < min || parsed.value > max) {
+          source.setAttribute('aria-invalid', 'true');
+          target.value = '';
+          status.textContent = `Enter a value from ${min} to ${max}.`;
+          return;
+        }
+      }
+      const converted = side === 0 ? pair.forward(parsed.value) : pair.reverse(parsed.value);
+      if (!Number.isFinite(converted)) {
+        target.value = '';
+        status.textContent = 'Result is too large. Try a smaller value.';
+        return;
+      }
+      // Never rewrite the field being edited, preserving decimals and the cursor.
+      target.value = pair.name === 'grinder' ? String(Math.round(converted)) : formatNumber(converted);
+    }
+
+    for (const pair of pairs) {
+      pair.ids.forEach((id, side) => {
+        const input = document.getElementById(id);
+        input.addEventListener('input', () => {
+          if (pair.name === 'temperature') activeTemperature = side;
+          update(pair, side);
+        });
+        if (pair.name === 'temperature') input.addEventListener('focus', () => { activeTemperature = side; });
+      });
+      update(pair, 0);
+    }
+
+    document.getElementById('clear').addEventListener('click', () => {
+      for (const pair of pairs) {
+        document.getElementById(pair.ids[0]).value = '';
+        update(pair, 0);
+      }
+    });
+
+    document.getElementById('sign').addEventListener('click', () => {
+      const pair = pairs.find(item => item.name === 'temperature');
+      const source = document.getElementById(pair.ids[activeTemperature]);
+      const raw = source.value.trim().replace(/−/g, '-');
+      source.value = raw.startsWith('-') ? raw.slice(1) : '-' + raw.replace(/^\+/, '');
+      update(pair, activeTemperature);
+      source.focus();
+    });
+  </script>
+</body>
+</html>
