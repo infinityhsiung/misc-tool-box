@@ -103,7 +103,8 @@ function selectEra(item, focusYear = item.start) {
   $('era-detail').setAttribute('class', `panel ${dynastyTone(item)}`);
   $('detail-name').textContent = item.noEra ? '無年號' : item.era;
   $('detail-range').textContent = formatRange(item);
-  $('detail-meta').textContent = `${item.dynasty} · ${item.ruler}${item.source ? ' · ' + item.source : ''}`;
+  $('detail-ruler').textContent = `${item.dynasty} · ${item.ruler}`;
+  $('detail-meta').textContent = item.source || '';
   $('detail-conversion').hidden = !canConvertEra(item);
   $('no-era-note').hidden = canConvertEra(item);
   $('no-era-note').textContent = item.uncertainEra ? '各年號起訖未定，暫不換算年次。' : item.noEra ? `${formatYear(item.start)}${item.end === item.start ? '' : '—' + formatYear(item.end)}` : '';

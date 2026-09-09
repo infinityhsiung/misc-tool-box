@@ -13,8 +13,7 @@
 <body>
   <main class="shell era-page">
     <header>
-      <nav class="page-nav"><a href="index.html" lang="en">← Home</a></nav>
-      <div class="topbar"><h1>年號換算</h1><button class="clear" id="reset" type="button">重置</button></div>
+      <div class="topbar"><nav class="page-nav"><a href="index.html" lang="en">← Home</a></nav><h1>年號換算</h1><button class="clear" id="reset" type="button">重置</button></div>
     </header>
     <noscript><p>請啟用 JavaScript 以使用換算工具。</p></noscript>
     <div class="era-panels">
@@ -30,12 +29,12 @@
         <div class="result-list year-results" id="year-results" aria-live="polite"></div>
       </section>
       <section class="panel tone-blue" aria-label="搜尋年號">
-        <div class="field search-field"><label for="era-search">年號 / 朝代 / 君主</label><div class="search-entry"><input id="era-search" type="search" placeholder="如：康熙、唐、李世民" autocomplete="off" spellcheck="false" aria-controls="search-results"><button class="search-clear" id="search-clear" type="button" aria-label="清除搜尋" hidden>×</button></div></div>
+        <div class="field search-field"><label for="era-search">搜尋</label><div class="search-entry"><input id="era-search" type="search" placeholder="年號 / 朝代 / 君主" autocomplete="off" spellcheck="false" aria-controls="search-results"><button class="search-clear" id="search-clear" type="button" aria-label="清除搜尋" hidden>×</button></div></div>
         <div class="search-summary" id="search-summary" role="status"></div>
         <div class="result-list search-results" id="search-results" hidden></div>
       </section>
       <section class="panel tone-orange" id="era-detail" aria-label="年號轉公元" hidden>
-        <div class="detail-heading"><h2 id="detail-name"></h2><span id="detail-range"></span></div>
+        <div class="detail-heading"><h2 id="detail-name"></h2><span id="detail-ruler"></span><span id="detail-range"></span></div>
         <p class="detail-meta" id="detail-meta"></p>
         <div id="detail-conversion">
           <div class="pair-grid">
