@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f6f7f3">
+  <meta name="description" content="公元年份與中國年號雙向換算。">
+  <title>年號換算 · Everyday Toolkit</title>
+  <link rel="stylesheet" href="toolkit.css">
+  <script src="nianhao-data.js" defer></script>
+  <script src="nianhao.js" defer></script>
+</head>
+<body>
+  <main class="shell era-page">
+    <header>
+      <nav class="page-nav"><a href="index.html" lang="en">← Home</a></nav>
+      <div class="topbar"><h1>年號換算</h1><button class="clear" id="reset" type="button">重置</button></div>
+    </header>
+    <noscript><p>請啟用 JavaScript 以使用換算工具。</p></noscript>
+    <div class="era-panels">
+      <section class="panel tone-green" aria-label="公元轉年號">
+        <div class="year-controls">
+          <div class="field year-field"><label for="year-input">公元年份</label><div class="year-entry"><button class="period" id="period" type="button" aria-label="切換公元或公元前">公元</button><input id="year-input" value="1453" inputmode="numeric" autocomplete="off" aria-label="年份" aria-describedby="year-status"></div></div>
+          <div class="stepper"><button id="previous-year" type="button" aria-label="前一年">−1</button><button id="next-year" type="button" aria-label="後一年">+1</button></div>
+        </div>
+        <p class="status" id="year-status" role="status"></p>
+        <input class="range" id="year-slider" type="range" min="-139" max="1911" step="1" value="1453" aria-label="選擇公元年份">
+        <div class="range-labels"><span>前140</span><span>1911</span></div>
+        <div class="section-label"><h2>對應年號</h2><span id="year-count"></span></div>
+        <div class="result-list year-results" id="year-results" aria-live="polite"></div>
+      </section>
+      <section class="panel tone-blue" aria-label="搜尋年號">
+        <div class="field search-field"><label for="era-search">年號 / 朝代 / 君主</label><div class="search-entry"><input id="era-search" type="search" placeholder="如：康熙、唐、李世民" autocomplete="off" spellcheck="false" aria-controls="search-results"><button class="search-clear" id="search-clear" type="button" aria-label="清除搜尋" hidden>×</button></div></div>
+        <div class="search-summary" id="search-summary" role="status"></div>
+        <div class="result-list search-results" id="search-results" hidden></div>
+      </section>
+      <section class="panel tone-orange" id="era-detail" aria-label="年號轉公元" hidden>
+        <div class="detail-heading"><h2 id="detail-name"></h2><span id="detail-range"></span></div>
+        <p class="detail-meta" id="detail-meta"></p>
+        <div id="detail-conversion">
+          <div class="pair-grid">
+            <div class="field"><label for="era-number" id="era-number-label">年次</label><input id="era-number" inputmode="numeric" autocomplete="off" aria-describedby="era-status"></div>
+            <span class="direction" aria-hidden="true">→</span>
+            <div class="field output-field"><span class="output-label">公元年份</span><output id="era-output" for="era-number era-slider" aria-live="polite"></output></div>
+          </div>
+          <p class="status" id="era-status" role="status"></p>
+          <input class="range" id="era-slider" type="range" min="1" max="7" value="4" aria-label="選擇年號年次">
+          <div class="range-labels"><span id="era-min"></span><span id="era-max"></span></div>
+        </div>
+        <p class="no-era-note" id="no-era-note" hidden></p>
+      </section>
+    </div>
+    <footer>前140年—1911年 · 僅換算年份</footer>
+  </main>
+</body>
+</html>
