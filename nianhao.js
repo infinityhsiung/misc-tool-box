@@ -6,19 +6,24 @@ const civilYear = position => position <= 0 ? position - 1 : position;
 const eraNumberFor = (item, year) => yearPosition(year) - yearPosition(item.eraStart) + 1;
 const yearForEraNumber = (item, number) => civilYear(yearPosition(item.eraStart) + number - 1);
 const recordsForYear = year => eraData.filter(item => item.start <= year && year <= item.end);
+const canConvertEra = item => !item.noEra && !item.uncertainEra;
 const searchRecords = query => {
   const text = normalize(query);
-  return eraData.filter(item => [item.noEra ? '無年號' : item.era, item.dynasty, item.ruler, item.source, item.dynasty + item.ruler, item.dynasty + item.era]
+  return eraData.filter(item => [item.noEra ? '無年號' : item.era, item.dynasty, item.ruler, item.source, item.dynasty + item.ruler, item.dynasty + item.era, ...(item.aliases || []).flatMap(alias => [alias, item.dynasty + alias])]
     .some(value => normalize(value).includes(text)));
 };
 const integerInRange = (raw, min, max) => /^\d+$/.test(raw.trim()) && Number(raw) >= min && Number(raw) <= max;
 const dynastyTones = Object.fromEntries([
-  ['green', ['西漢', '東漢', '唐', '後周']],
-  ['orange', ['新', '南梁', '北周', '後梁', '後晉', '元', '北元']],
-  ['pink', ['更始', '劉宋', '南陳', '武周', '後漢', '遼', '明', '南明']],
-  ['purple', ['曹魏', '南齊', '北齊', '西遼', '金']],
-  ['blue', ['蜀漢', '西晉', '東晉', '北魏', '後唐', '北宋', '南宋']],
-  ['teal', ['東吳', '東魏', '西魏', '隋', '西夏', '後金 / 清', '清']]
+  // Five Phases inspire the palette; disputed or later traditions use visual choices.
+  ['wood', ['南齊', '北齊', '北周', '後周']],
+  ['fire', ['西漢', '東漢', '更始', '蜀漢', '南梁', '隋', '北宋', '南宋', '明', '南明']],
+  ['earth', ['新', '曹魏', '南陳', '唐', '武周', '後唐']],
+  ['metal', ['西晉', '東晉', '後梁', '後晉', '金']],
+  ['water-violet', ['劉宋']],
+  ['water', ['北魏', '東魏', '西魏', '後漢', '遼', '西遼']],
+  ['purple', ['西夏']],
+  ['blue', ['元', '北元']],
+  ['teal', ['東吳', '南詔', '後金 / 清', '清']]
 ].flatMap(([tone, dynasties]) => dynasties.map(dynasty => [dynasty, tone])));
 const dynastyTone = item => `tone-${dynastyTones[item.dynasty] || 'blue'}`;
 const $ = id => document.getElementById(id);
@@ -28,14 +33,14 @@ let selectedEra = null;
 
 function eraCaption(item, year) {
   if (item.noEra) return '無年號';
+  if (item.uncertainEra) return item.era;
   const number = eraNumberFor(item, year);
   return `${item.era}${eraYearName(number)}${eraYearSuffix(item, number)}`;
 }
 
 function resultButton(item, caption) {
   const index = eraData.indexOf(item);
-  const meta = `${item.dynasty} · ${item.ruler} · ${formatRange(item)}${item.source ? ' · ' + item.source : ''}`;
-  return `<button type="button" class="result-row ${dynastyTone(item)}" data-era="${index}" aria-pressed="${item === selectedEra}"><strong>${escapeHtml(caption)}</strong><small>${escapeHtml(meta)}</small></button>`;
+  return `<button type="button" class="result-row ${dynastyTone(item)}" data-era="${index}" aria-pressed="${item === selectedEra}"><span class="result-dynasty">${escapeHtml(item.dynasty)}</span><strong>${escapeHtml(caption)}</strong><span class="result-ruler">${escapeHtml(item.ruler)}</span><small>${escapeHtml(formatRange(item))}</small>${item.source ? `<small>${escapeHtml(item.source)}</small>` : ''}</button>`;
 }
 
 function markSelectedEra() {
@@ -94,18 +99,18 @@ function readYearInput() {
 
 function selectEra(item, focusYear = item.start) {
   selectedEra = item;
-  const first = eraNumberFor(item, item.start);
-  const last = eraNumberFor(item, item.end);
-  const number = Math.max(first, Math.min(last, eraNumberFor(item, focusYear)));
   $('era-detail').hidden = false;
   $('era-detail').setAttribute('class', `panel ${dynastyTone(item)}`);
   $('detail-name').textContent = item.noEra ? '無年號' : item.era;
   $('detail-range').textContent = formatRange(item);
   $('detail-meta').textContent = `${item.dynasty} · ${item.ruler}${item.source ? ' · ' + item.source : ''}`;
-  $('detail-conversion').hidden = Boolean(item.noEra);
-  $('no-era-note').hidden = !item.noEra;
-  $('no-era-note').textContent = item.noEra ? `${formatYear(item.start)}${item.end === item.start ? '' : '—' + formatYear(item.end)}` : '';
-  if (!item.noEra) {
+  $('detail-conversion').hidden = !canConvertEra(item);
+  $('no-era-note').hidden = canConvertEra(item);
+  $('no-era-note').textContent = item.uncertainEra ? '各年號起訖未定，暫不換算年次。' : item.noEra ? `${formatYear(item.start)}${item.end === item.start ? '' : '—' + formatYear(item.end)}` : '';
+  if (canConvertEra(item)) {
+    const first = eraNumberFor(item, item.start);
+    const last = eraNumberFor(item, item.end);
+    const number = Math.max(first, Math.min(last, eraNumberFor(item, focusYear)));
     $('era-slider').min = String(first);
     $('era-slider').max = String(last);
     $('era-slider').disabled = first === last;
@@ -128,7 +133,7 @@ function setEraNumber(number, preserveInput = false) {
 }
 
 function readEraInput() {
-  if (!selectedEra || selectedEra.noEra) return;
+  if (!selectedEra || !canConvertEra(selectedEra)) return;
   const raw = $('era-number').value;
   const first = eraNumberFor(selectedEra, selectedEra.start);
   const last = eraNumberFor(selectedEra, selectedEra.end);
@@ -171,7 +176,7 @@ for (const [id, step] of [['previous-year', -1], ['next-year', 1]]) {
 }
 $('era-number').addEventListener('input', readEraInput);
 $('era-slider').addEventListener('input', () => {
-  if (!selectedEra || selectedEra.noEra) return;
+  if (!selectedEra || !canConvertEra(selectedEra)) return;
   const number = Number($('era-slider').value);
   setEraNumber(number);
   setYear(yearForEraNumber(selectedEra, number), false);
