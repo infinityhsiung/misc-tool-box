@@ -5,12 +5,15 @@ const yearPosition = year => year < 0 ? year + 1 : year;
 const civilYear = position => position <= 0 ? position - 1 : position;
 const eraNumberFor = (item, year) => yearPosition(year) - yearPosition(item.eraStart) + 1;
 const yearForEraNumber = (item, number) => civilYear(yearPosition(item.eraStart) + number - 1);
-const recordsForYear = year => eraData.filter(item => item.start <= year && year <= item.end);
+// Keep regional records after the main dynasties in compact result lists.
+const resultPriority = { '西夏': 1, '南詔': 1, '北元': 1, '南明': 1, '西遼': 1 };
+const sortResults = records => records.sort((a, b) => (resultPriority[a.dynasty] || 0) - (resultPriority[b.dynasty] || 0));
+const recordsForYear = year => sortResults(eraData.filter(item => item.start <= year && year <= item.end));
 const canConvertEra = item => !item.noEra && !item.uncertainEra;
 const searchRecords = query => {
   const text = normalize(query);
-  return eraData.filter(item => [item.noEra ? '無年號' : item.era, item.dynasty, item.ruler, item.source, item.dynasty + item.ruler, item.dynasty + item.era, ...(item.aliases || []).flatMap(alias => [alias, item.dynasty + alias])]
-    .some(value => normalize(value).includes(text)));
+  return sortResults(eraData.filter(item => [item.noEra ? '無年號' : item.era, item.dynasty, item.ruler, item.source, item.dynasty + item.ruler, item.dynasty + item.era, ...(item.aliases || []).flatMap(alias => [alias, item.dynasty + alias])]
+    .some(value => normalize(value).includes(text))));
 };
 const integerInRange = (raw, min, max) => /^\d+$/.test(raw.trim()) && Number(raw) >= min && Number(raw) <= max;
 const dynastyTones = Object.fromEntries([
@@ -58,6 +61,7 @@ function renderYearResults() {
 }
 
 function setYear(year, syncDetail = true, preserveInput = false) {
+  const yearChanged = year !== selectedYear;
   selectedYear = year;
   beforeCE = year < 0;
   if (!preserveInput) $('year-input').value = String(Math.abs(year));
@@ -78,6 +82,7 @@ function setYear(year, syncDetail = true, preserveInput = false) {
     }
   }
   renderYearResults();
+  if (yearChanged) $('year-results').scrollTop = 0;
   markSelectedEra();
 }
 

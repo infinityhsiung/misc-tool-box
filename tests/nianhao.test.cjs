@@ -32,6 +32,17 @@ vm.runInContext(`
   assert.equal(searchRecords('赵禥')[0].era, '咸淳');
   assert(!searchRecords('宋理宗').some(item => item.era === '咸淳'));
   assert.equal(searchRecords('景云')[0].era, '景雲');
+  const originalOrder = eraData.slice();
+  for (const year of [1127, 1140, 1178, 1211]) {
+    const matches = recordsForYear(year);
+    const jinIndex = matches.findIndex(item => item.dynasty === '金');
+    const regionalIndex = matches.findIndex(item => ['西夏', '西遼'].includes(item.dynasty));
+    assert(jinIndex >= 0 && jinIndex < regionalIndex, 'Jin must precede regional records in ' + year);
+    assert(matches.some(item => item.dynasty === '西遼'));
+    assert.equal(matches.length, eraData.filter(item => item.start <= year && year <= item.end).length);
+  }
+  assert.equal(searchRecords('紹興')[0].dynasty, '南宋');
+  assert.deepEqual(eraData, originalOrder);
   const fixtures = [
     ['南宋', '咸淳', '度宗 趙禥', 1265, 1274, 1265],
     ['東漢', '元興', '和帝 劉肇', 105, 105, 105],
