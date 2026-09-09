@@ -21,7 +21,7 @@ function setup(withLibrary = true) {
   const map = {
     layers, fits: 0, attributionControl: { setPrefix() {} },
     removeLayer(layer) { layers.delete(layer); },
-    fitBounds() { this.fits += 1; },
+    fitBounds(points) { this.fits += 1; this.bounds = points; },
     center: [31.2, 121.55], zoom: 12
   };
   const tiles = {
@@ -37,6 +37,7 @@ function setup(withLibrary = true) {
     control: { zoom: () => ({ addTo() {} }) },
     tileLayer: () => tiles,
     circleMarker: coordinates => ({ coordinates, bindTooltip(label) { this.label = label; return this; } }),
+    polyline: coordinates => ({ type: 'line', coordinates, bindTooltip(label) { this.label = label; return this; } }),
     layerGroup: markers => (overlay = { markers, addTo() { layers.add(this); } })
   };
   const context = vm.createContext({
@@ -57,6 +58,13 @@ assert.deepEqual(Array.from(overlay.markers, marker => marker.label.textContent)
   '长安', '华州 · 桶关', '同州', '陕州', '虢州'
 ]);
 assert.equal(overlay.markers[2].label.attributes['aria-label'], '上海海事法院：羊关');
+const corridor = overlay.markers.find(marker => marker.label.textContent === '河西走廊');
+assert.equal(corridor.type, 'line');
+assert(corridor.coordinates.length > 2);
+for (const point of corridor.coordinates) {
+  assert(map.bounds.some(bound => bound[0] === point[0] && bound[1] === point[1]));
+}
+assert(map.bounds.every(point => point.length === 2 && point.every(Number.isFinite)));
 // A user pans/zooms before changing worlds; neither operation may reset that view.
 map.center = [31.24, 121.54];
 map.zoom = 15;

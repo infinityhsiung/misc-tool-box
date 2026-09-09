@@ -5,7 +5,20 @@ const worldPlaces = [
   { surface: '御桥', li: '君士坦丁堡', lat: 31.1558316, lng: 121.5609656 },
   { surface: '洋泾', li: '吐谷浑', lat: 31.2435273, lng: 121.5468943 },
   { surface: '上海海事法院', li: '羊关', lat: 31.2253329, lng: 121.5450202 },
-  { surface: '世纪大道', li: '河西走廊', lat: 31.2308126, lng: 121.5229813, direction: 'left' },
+  {
+    surface: '世纪大道', li: '河西走廊', direction: 'left',
+    // Simplified road trace, from Lujiazui toward Century Park.
+    path: [
+      [31.2400436, 121.4963243], [31.2392209, 121.4990638],
+      [31.2384004, 121.5011837], [31.2377876, 121.5028412],
+      [31.2370192, 121.5052305], [31.2358961, 121.5089823],
+      [31.2345645, 121.5129345], [31.2330942, 121.5172067],
+      [31.2317877, 121.5208365], [31.2290609, 121.5256619],
+      [31.2260030, 121.5309835], [31.2243184, 121.5339177],
+      [31.2237935, 121.5346472], [31.2227048, 121.5366128],
+      [31.2210993, 121.5394045], [31.2196348, 121.5417709]
+    ]
+  },
   { surface: '世博', li: '河套', lat: 31.187638, lng: 121.485121 },
   { surface: '紫荆广场', li: '大散关', lat: 31.277065, lng: 121.51242, direction: 'right' },
   { surface: '白玉兰广场', li: '兰州', lat: 31.2510637, lng: 121.4934615, direction: 'left' },
@@ -68,9 +81,12 @@ function initWorldMap() {
     const label = document.createElement('span');
     label.textContent = place.li;
     label.setAttribute('aria-label', `${place.surface}：${place.li}`);
-    return L.circleMarker([place.lat, place.lng], {
+    const feature = place.path ? L.polyline(place.path, {
+      color: '#c59ae8', weight: 6, opacity: 0.7, lineCap: 'round', lineJoin: 'round', interactive: false
+    }) : L.circleMarker([place.lat, place.lng], {
       radius: 5, color: '#715397', weight: 2, fillColor: '#fff', fillOpacity: 1, interactive: false
-    }).bindTooltip(label, { permanent: true, direction, offset, opacity: 1, className: 'li-place-label' });
+    });
+    return feature.bindTooltip(label, { permanent: true, direction, offset, opacity: 1, className: 'li-place-label' });
   }));
   let isLiWorld = false;
   toggle.addEventListener('click', () => {
@@ -85,7 +101,7 @@ function initWorldMap() {
     container.setAttribute('aria-label', `上海地图 · ${name}`);
   });
   toggle.disabled = false;
-  map.fitBounds(worldPlaces.map(place => [place.lat, place.lng]), { padding: [64, 56], maxZoom: 12 });
+  map.fitBounds(worldPlaces.flatMap(place => place.path || [[place.lat, place.lng]]), { padding: [64, 56], maxZoom: 12 });
   // Keep the current geographic center on rotation or mobile browser chrome changes.
   if (window.ResizeObserver) new ResizeObserver(() => map.invalidateSize({ pan: false })).observe(container);
 }
