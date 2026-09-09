@@ -8,7 +8,7 @@ const yearForEraNumber = (item, number) => civilYear(yearPosition(item.eraStart)
 const recordsForYear = year => eraData.filter(item => item.start <= year && year <= item.end);
 const searchRecords = query => {
   const text = normalize(query);
-  return eraData.filter(item => [item.noEra ? '無年號' : item.era, item.dynasty, item.ruler]
+  return eraData.filter(item => [item.noEra ? '無年號' : item.era, item.dynasty, item.ruler, item.source, item.dynasty + item.ruler, item.dynasty + item.era]
     .some(value => normalize(value).includes(text)));
 };
 const integerInRange = (raw, min, max) => /^\d+$/.test(raw.trim()) && Number(raw) >= min && Number(raw) <= max;
