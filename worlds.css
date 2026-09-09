@@ -2,7 +2,7 @@
 .map-page .topbar { flex-wrap: wrap; }
 .map-page h1 { flex: 1; white-space: nowrap; font-size: 23px; }
 .map-page .page-nav a { font-size: 14px; }
-.world-toggle { min-height: 44px; padding: 0 12px; border: 1px solid #dbe7d7; border-radius: 9px; background: #eef4e9; color: #235c4b; font-size: 14px; font-weight: 600; }
+.world-toggle { flex-shrink: 0; width: calc(6em + 26px); min-height: 44px; padding: 0 12px; border: 1px solid #dbe7d7; border-radius: 9px; background: #eef4e9; color: #235c4b; font-size: 14px; font-weight: 600; white-space: nowrap; }
 .map-frame { position: relative; flex: 1; min-height: 220px; overflow: hidden; border: 1px solid var(--line); border-radius: 14px; isolation: isolate; }
 #shanghai-map { height: 100%; width: 100%; background: #e9eeeb; font: inherit; }
 .map-page .leaflet-control-zoom { border: 1px solid var(--line); border-radius: 9px; overflow: hidden; box-shadow: 0 2px 8px #203b3814; }
@@ -18,7 +18,7 @@
 .map-notice { position: absolute; z-index: 1000; left: 10px; right: 10px; bottom: 48px; display: flex; align-items: center; gap: 8px; padding: 8px 12px; border: 1px solid var(--line); border-radius: 9px; background: #fffffff5; color: var(--ink); font-size: 14px; line-height: 1.5; }
 .map-notice span { flex: 1; }
 .map-notice button { flex-shrink: 0; min-height: 44px; padding: 0 10px; border: 0; border-radius: 7px; background: #eef4e9; color: var(--green); }
-@media (max-width: 350px) { .map-page .topbar { gap: 8px; } .map-page h1 { font-size: 21px; } .world-toggle { padding: 0 8px; } }
+@media (max-width: 350px) { .map-page .topbar { gap: 8px; } .map-page h1 { font-size: 21px; } .world-toggle { width: calc(6em + 18px); padding: 0 8px; } }
 
 html:has(.map-page[data-world="li"]) {
   color-scheme: dark;
@@ -30,12 +30,10 @@ html:has(.map-page[data-world="li"]) {
   background: var(--paper);
 }
 .map-page[data-world="li"] { --map-serif: "Songti TC", "Songti SC", "Noto Serif CJK TC", "SimSun", serif; }
-.map-page[data-world="li"] h1 { font-family: var(--map-serif); letter-spacing: .12em; }
-.map-page[data-world="li"] h1::before { content: ""; display: inline-block; width: 7px; height: 18px; margin-right: 9px; background: #994f3e; vertical-align: -1px; }
 .map-page[data-world="li"] .map-frame { border-radius: 14px; box-shadow: 0 0 0 2px var(--paper), 0 0 0 3px #51493670; }
 .map-page[data-world="li"] .map-frame::after { content: ""; border-radius: inherit; position: absolute; inset: 0; z-index: 450; pointer-events: none; box-shadow: inset 0 0 55px #0d0c0960; background: repeating-linear-gradient(0deg, #e5d2a603 0 1px, transparent 1px 4px); }
 .map-page[data-world="li"] .world-toggle,
-.map-page[data-world="li"] .map-notice button { background: #28251c; border-color: #796846; color: #e4d6b6; border-radius: 3px; font-family: var(--map-serif); }
+.map-page[data-world="li"] .map-notice button { background: #28251c; border-color: #796846; color: #e4d6b6; }
 .map-page[data-world="li"] #shanghai-map { background: #171710; }
 .map-page[data-world="li"] .leaflet-tile-pane { filter: invert(1) grayscale(1) sepia(.65) saturate(.65) brightness(.85) contrast(.95); }
 .map-page[data-world="li"] .leaflet-control-zoom { border-radius: 3px; }
