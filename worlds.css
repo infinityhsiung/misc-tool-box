@@ -9,7 +9,8 @@
 .map-page .leaflet-control-zoom a { width: 44px; height: 44px; line-height: 44px; color: var(--ink); }
 .map-page .leaflet-control-attribution { max-width: 100%; padding: 3px 6px; background: #ffffffeb; font-size: 12px; line-height: 1.4; }
 .map-page .leaflet-control-attribution a { color: #235c4b; }
-.map-page .li-place-label { padding: 5px 10px; border: 1px solid #bca6cf; border-radius: 8px; background: #f9f5ff99; color: #624084; box-shadow: 0 2px 8px #37224d26; font: 600 17px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; white-space: nowrap; }
+.map-page .li-place-label { padding: 6px 5px; border: 1px solid #bca6cf; border-radius: 8px; background: #f9f5ff99; color: #624084; box-shadow: 0 2px 8px #37224d26; font: 600 14px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; white-space: nowrap; }
+.map-page .li-place-label > span { display: block; writing-mode: vertical-rl; text-orientation: upright; white-space: pre; }
 .map-page .li-place-label { --label-border: #bca6cf; }
 .map-page .li-place-label.leaflet-tooltip-top::before { border-top-color: var(--label-border); }
 .map-page .li-place-label.leaflet-tooltip-bottom::before { border-bottom-color: var(--label-border); }

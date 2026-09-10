@@ -79,7 +79,7 @@ function initWorldMap() {
     const direction = place.direction || 'top';
     const offset = { top: [0, -8], bottom: [0, 8], left: [-8, 0], right: [8, 0] }[direction];
     const label = document.createElement('span');
-    label.textContent = place.li;
+    label.textContent = place.li.replace(/ · /g, '·');
     label.setAttribute('aria-label', `${place.surface}：${place.li}`);
     const feature = place.path ? L.polyline(place.path, {
       color: '#bd9b5d', weight: 6, opacity: 0.7, lineCap: 'round', lineJoin: 'round', interactive: false
@@ -91,10 +91,10 @@ function initWorldMap() {
   let isLiWorld = false;
   toggle.addEventListener('click', () => {
     isLiWorld = !isLiWorld;
-    if (isLiWorld) liWorld.addTo(map);
-    else map.removeLayer(liWorld);
     const name = isLiWorld ? '李世界' : '表世界';
     page.dataset.world = isLiWorld ? 'li' : 'surface';
+    if (isLiWorld) liWorld.addTo(map);
+    else map.removeLayer(liWorld);
     document.getElementById('map-theme').setAttribute('content', isLiWorld ? '#11110e' : '#f6f7f3');
     heading.textContent = name;
     toggle.textContent = isLiWorld ? '切換到表世界' : '切換到李世界';

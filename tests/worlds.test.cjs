@@ -55,7 +55,7 @@ assert(map.layers.has(tiles));
 assert.equal(elements['world-toggle'].disabled, false);
 assert.deepEqual(Array.from(overlay.markers, marker => marker.label.textContent), [
   '君士坦丁堡', '吐谷渾', '羊關', '河西走廊', '河套', '大散關', '蘭州',
-  '長安', '華州 · 桶關', '同州', '陝州', '虢州'
+  '長安', '華州·桶關', '同州', '陝州', '虢州'
 ]);
 assert.equal(overlay.markers[2].label.attributes['aria-label'], '上海海事法院：羊關');
 const corridor = overlay.markers.find(marker => marker.label.textContent === '河西走廊');
